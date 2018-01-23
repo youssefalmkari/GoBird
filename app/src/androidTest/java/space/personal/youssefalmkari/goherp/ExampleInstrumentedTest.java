@@ -1,4 +1,4 @@
-package space.personal.youssefalmkari.gobird;
+package space.personal.youssefalmkari.goherp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

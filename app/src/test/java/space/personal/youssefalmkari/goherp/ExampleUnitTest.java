@@ -1,4 +1,4 @@
-package space.personal.youssefalmkari.gobird;
+package space.personal.youssefalmkari.goherp;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package space.personal.youssefalmkari.gobird;
+package space.personal.youssefalmkari.goherp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -50,7 +50,7 @@ import java.util.Locale;
 
 public class SpeechToTextActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener { 
+        GoogleApiClient.OnConnectionFailedListener {
 
     // LogCat tag
     private static final String TAG = SpeechToTextActivity.class.getSimpleName();

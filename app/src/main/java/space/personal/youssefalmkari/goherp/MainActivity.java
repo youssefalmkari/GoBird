@@ -1,4 +1,4 @@
-package space.personal.youssefalmkari.gobird;
+package space.personal.youssefalmkari.goherp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

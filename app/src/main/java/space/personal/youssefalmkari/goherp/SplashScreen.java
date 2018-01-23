@@ -1,4 +1,4 @@
-package space.personal.youssefalmkari.gobird;
+package space.personal.youssefalmkari.goherp;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -16,16 +16,13 @@ public class SplashScreen extends AppCompatActivity {
         // Create SplashScreen Configuration
         EasySplashScreen config = new EasySplashScreen(SplashScreen.this)
                 .withFullScreen()
-                .withTargetActivity(space.personal.youssefalmkari.gobird.SpeechToTextActivity.class)
+                .withTargetActivity(SpeechToTextActivity.class)
                 .withSplashTimeOut(5000)
                 .withBackgroundColor(Color.parseColor("#FFFFFF"))
                 .withLogo(R.drawable.kestrel2)
-                .withFooterText("Copyright 2018")
-                .withHeaderText("READY TO EXPLORE");
+                .withFooterText("Copyright 2018");
 
         // Set Text Color and Size
-        config.getHeaderTextView().setTextColor(Color.BLACK);
-        config.getHeaderTextView().setTextSize(30);
         config.getFooterTextView().setTextColor(Color.BLACK);
         config.getFooterTextView().setTextSize(10);
 
