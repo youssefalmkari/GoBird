@@ -23,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 /**
@@ -36,8 +37,9 @@ public class SignInActivity extends AppCompatActivity
     private LinearLayout displaySection;
     private TextView name, email;
     private SignInButton signIn;
+    private Button signOut;
     private Button btnContinue;
-    private GoogleApiClient mGoogleApiClient;
+    private Button btnSkip;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int REQ_CODE_SIGN_IN = 101;
 
@@ -51,13 +53,19 @@ public class SignInActivity extends AppCompatActivity
         name = findViewById(R.id.user_name);
         email = findViewById(R.id.email_display);
         btnContinue = findViewById(R.id.btn_continue);
-        btnContinue.setVisibility(View.GONE);
         btnContinue.setOnClickListener(this);
+        btnSkip = findViewById(R.id.btn_skip);
+        btnSkip.setOnClickListener(this);
         signIn = findViewById(R.id.sign_in);
         signIn.setOnClickListener(this);
+        signOut = findViewById(R.id.sign_out);
+        signOut.setOnClickListener(this);
 
-        //Hide display section
+        //Hide sections
         displaySection.setVisibility(View.GONE);
+        btnContinue.setVisibility(View.GONE);
+        signOut.setVisibility(View.GONE);
+
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -86,15 +94,18 @@ public class SignInActivity extends AppCompatActivity
     private void updateUI(GoogleSignInAccount account) {
 
         if(account != null) {
-            displaySection.setVisibility(View.VISIBLE);
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
             signIn.setVisibility(View.GONE);
+            btnSkip.setVisibility(View.GONE);
+            displaySection.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.VISIBLE);
+            signOut.setVisibility(View.VISIBLE);
         } else {
-
+            // at this point user must sign in
+            // skip button?
         }
     }
 
@@ -106,8 +117,13 @@ public class SignInActivity extends AppCompatActivity
                 signIn();
                 break;
             case R.id.btn_continue:
-                Intent intent = new Intent(this, SpeechToTextActivity.class);
-                startActivity(intent);
+                goToNextActivity();
+                break;
+            case R.id.sign_out:
+                signOut();
+                break;
+            case R.id.btn_skip:
+                goToNextActivity();
                 break;
         }
     }
@@ -120,6 +136,17 @@ public class SignInActivity extends AppCompatActivity
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQ_CODE_SIGN_IN);
+    }
+
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // respond to the event and trigger any appropriate
+                        // logic in app or your back-end code
+                    }
+                });
     }
 
     @Override
@@ -147,5 +174,10 @@ public class SignInActivity extends AppCompatActivity
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
         }
+    }
+
+    private void goToNextActivity() {
+        Intent intent = new Intent(this, SpeechToTextActivity.class);
+        startActivity(intent);
     }
 }

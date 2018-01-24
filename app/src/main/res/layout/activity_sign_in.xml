@@ -49,6 +49,24 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:shadowColor="@color/google_blue"
         android:text="Continue"
         android:id="@+id/btn_continue"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:text="Sign Out"
+        android:id="@+id/sign_out"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:text="Skip"
+        android:id="@+id/btn_skip"/>
+
 </LinearLayout>
