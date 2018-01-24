@@ -104,8 +104,11 @@ public class SignInActivity extends AppCompatActivity
             btnContinue.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.VISIBLE);
         } else {
-            // at this point user must sign in
-            // skip button?
+            signIn.setVisibility(View.VISIBLE);
+            btnSkip.setVisibility(View.VISIBLE);
+            displaySection.setVisibility(View.GONE);
+            btnContinue.setVisibility(View.GONE);
+            signOut.setVisibility(View.GONE);
         }
     }
 
@@ -145,6 +148,8 @@ public class SignInActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<Void> task) {
                         // respond to the event and trigger any appropriate
                         // logic in app or your back-end code
+                        handleSignOutResult(task);
+
                     }
                 });
     }
@@ -172,6 +177,12 @@ public class SignInActivity extends AppCompatActivity
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
+        }
+    }
+
+    private void handleSignOutResult(Task<Void> completedTask) {
+        if (completedTask.isSuccessful()) {
             updateUI(null);
         }
     }
