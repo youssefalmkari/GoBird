@@ -27,10 +27,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveClient;
+import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
@@ -44,12 +51,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.google.android.gms.drive.Drive.SCOPE_FILE;
+
 /**
  * Created by Youssef Almkari on 1/18/2018.
  */
 
 public class SpeechToTextActivity extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks,
+        implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     // LogCat tag
@@ -64,6 +73,10 @@ public class SpeechToTextActivity extends AppCompatActivity
     private final int REQ_CODE_SPEECH_INPUT = 100;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
+    GoogleSignInClient mGoogleSignInClient;
+    GoogleSignInAccount mGoogleSignInAccount;
+    DriveClient mDriveClient;
+    DriveResourceClient mDriveResourceClient;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
     String currentDateTime;
@@ -78,17 +91,35 @@ public class SpeechToTextActivity extends AppCompatActivity
         txtSpeechDateTime = findViewById(R.id.txtSpeechDateTime);
         txtSpeechLocation = findViewById(R.id.txtSpeechLocation);
         btnSpeak = findViewById(R.id.btnSpeak);
+        btnSpeak.setOnClickListener(this);
 
+        mGoogleSignInClient = buildGoogleSignInClient();
+
+        // Location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         initializeGooglePlay();
+        initializeGoogleDrive();
 
-        // Speak Button - OnClick
-        btnSpeak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch(view.getId()) {
+            case R.id.btnSpeak:
                 promptSpeechInput();
-            }
-        });
+                break;
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
 
     }
 
@@ -111,9 +142,6 @@ public class SpeechToTextActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Receiving speech input
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -197,6 +225,28 @@ public class SpeechToTextActivity extends AppCompatActivity
             //Request Location Permission
             checkLocationPermission();
         }
+    }
+
+    /**
+     * Initialize Google Drive
+     */
+    private void initializeGoogleDrive() {
+        // Build a drive client.
+        mDriveClient = Drive.getDriveClient(this, mGoogleSignInAccount);
+        // Build a drive resource client.
+        mDriveResourceClient =
+                Drive.getDriveResourceClient(this, mGoogleSignInAccount);
+    }
+
+    /**
+     * Build Google SignIn Client
+     */
+    private GoogleSignInClient buildGoogleSignInClient() {
+        GoogleSignInOptions signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(SCOPE_FILE)
+                .build();
+        return GoogleSignIn.getClient(this, signInOptions);
     }
 
     protected synchronized void buildGoogleApiClient() {
