@@ -98,7 +98,7 @@ public class SpeechToTextActivity extends AppCompatActivity
         // Location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         initializeGooglePlay();
-        initializeGoogleDrive();
+        // initializeGoogleDrive();
 
     }
 

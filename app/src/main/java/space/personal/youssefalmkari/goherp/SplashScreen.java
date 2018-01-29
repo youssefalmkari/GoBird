@@ -19,7 +19,7 @@ public class SplashScreen extends AppCompatActivity {
                 .withTargetActivity(SignInActivity.class)
                 .withSplashTimeOut(5000)
                 .withBackgroundColor(Color.parseColor("#FFFFFF"))
-                .withLogo(R.drawable.kestrel2)
+                .withLogo(R.drawable.northernred)
                 .withFooterText("Copyright 2018");
 
         // Set Text Color and Size
