@@ -1,6 +1,7 @@
 package space.personal.youssefalmkari.goherp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -51,6 +52,7 @@ public class SignInActivity extends AppCompatActivity
 
         //Bind
         displaySection = findViewById(R.id.display_section);
+        userPhoto = findViewById(R.id.user_photo);
         name = findViewById(R.id.user_name);
         email = findViewById(R.id.email_display);
         btnContinue = findViewById(R.id.btn_continue);
@@ -97,10 +99,9 @@ public class SignInActivity extends AppCompatActivity
         if(account != null) {
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
-            String imageURL = String.valueOf(account.getPhotoUrl());
+            Uri imageURL = account.getPhotoUrl();
             Picasso.with(this).load(imageURL)
-                    .resize(70,70)
-                    .centerCrop()
+                    .resize(250, 250)
                     .into(userPhoto);
             name.setText(userName);
             email.setText(userEmail);
