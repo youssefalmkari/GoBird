@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Yose on 1/23/2018.
@@ -96,6 +97,11 @@ public class SignInActivity extends AppCompatActivity
         if(account != null) {
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
+            String imageURL = String.valueOf(account.getPhotoUrl());
+            Picasso.with(this).load(imageURL)
+                    .resize(70,70)
+                    .centerCrop()
+                    .into(userPhoto);
             name.setText(userName);
             email.setText(userEmail);
             signIn.setVisibility(View.GONE);
