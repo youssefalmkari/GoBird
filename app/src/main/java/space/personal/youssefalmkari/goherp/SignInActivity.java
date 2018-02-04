@@ -9,8 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,6 +34,7 @@ public class SignInActivity extends AppCompatActivity
 
     private static final String TAG = "Account Sign In: ";
     private LinearLayout displaySection;
+    private ImageView userPhoto;
     private TextView name, email;
     private SignInButton signIn;
     private Button signOut;
@@ -145,7 +149,6 @@ public class SignInActivity extends AppCompatActivity
                         // respond to the event and trigger any appropriate
                         // logic in app or your back-end code
                         handleSignOutResult(task);
-
                     }
                 });
     }

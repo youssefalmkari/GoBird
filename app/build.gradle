@@ -29,6 +29,8 @@ dependencies {
 
     // Splash Screen
     compile 'gr.pantrif:easy-android-splash-screen:0.0.1'
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
     // Google Play services
     compile 'com.google.android.gms:play-services-auth:11.8.0'
     compile 'com.google.android.gms:play-services-location:11.8.0'
