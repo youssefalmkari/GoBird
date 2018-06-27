@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveClient;
@@ -44,7 +46,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -65,6 +69,7 @@ public class SpeechToTextActivity extends AppCompatActivity
     private static final String TAG = SpeechToTextActivity.class.getSimpleName();
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final int REQ_CODE_SIGN_IN = 101;
 
     private TextView txtSpeechInput;
     private TextView txtSpeechDateTime;
@@ -93,12 +98,14 @@ public class SpeechToTextActivity extends AppCompatActivity
         btnSpeak = findViewById(R.id.btnSpeak);
         btnSpeak.setOnClickListener(this);
 
-        mGoogleSignInClient = buildGoogleSignInClient();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
 
         // Location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         initializeGooglePlay();
-        // initializeGoogleDrive();
+        initializeGoogleDrive();
 
     }
 
@@ -110,17 +117,11 @@ public class SpeechToTextActivity extends AppCompatActivity
                 promptSpeechInput();
                 break;
         }
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-
     }
 
     /**
@@ -161,10 +162,8 @@ public class SpeechToTextActivity extends AppCompatActivity
                 }
                 break;
             }
-
         }
     }
-
 
     /**
      * Create options menu
@@ -231,11 +230,16 @@ public class SpeechToTextActivity extends AppCompatActivity
      * Initialize Google Drive
      */
     private void initializeGoogleDrive() {
-        // Build a drive client.
-        mDriveClient = Drive.getDriveClient(this, mGoogleSignInAccount);
-        // Build a drive resource client.
-        mDriveResourceClient =
-                Drive.getDriveResourceClient(this, mGoogleSignInAccount);
+        if (mGoogleSignInAccount != null) {
+            // Build a drive client.
+            mDriveClient = Drive.getDriveClient(this, mGoogleSignInAccount);
+            // Build a drive resource client.
+            mDriveResourceClient =
+                    Drive.getDriveResourceClient(this, mGoogleSignInAccount);
+            Toast.makeText(this, "Drive Client Build: SUCCESS", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Drive Client Build: FAIL", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

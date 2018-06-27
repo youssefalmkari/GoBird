@@ -23,12 +23,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Yose on 1/23/2018.
+ * Created by Youssef Almkari on 1/23/2018.
  */
 
 public class SignInActivity extends AppCompatActivity
@@ -77,6 +78,7 @@ public class SignInActivity extends AppCompatActivity
                 .requestServerAuthCode(getString(R.string.server_client_id))
                 .requestProfile()
                 .requestEmail()
+                .requestScopes(Drive.SCOPE_FILE)
                 .build();
 
         // Build a GoogleSignInClient with the options specified by gso.
@@ -120,7 +122,7 @@ public class SignInActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(View view) {
+        public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.sign_in:
